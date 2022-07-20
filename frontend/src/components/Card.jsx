@@ -2,7 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { format } from 'timeago.js'
+import { format } from 'timeago.js';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const Container = styled.div`
   width: ${(props) => props.type !== "sm" && "360px"};
@@ -25,6 +26,11 @@ const Details = styled.div`
   gap: 12px;
   flex: 1;
 `;
+
+const VideoThumbnailContainer = styled.div`
+  position:relative;
+  overflow:hidden;
+`
 
 const ChannelImage = styled.img`
   width: 36px;
@@ -53,6 +59,23 @@ const Info = styled.div`
   color: ${({ theme }) => theme.textSoft};
 `;
 
+const BackDrop = styled.div`
+  position:absolute;
+  background-color: rgba(0,0,0,0.6);
+  z-index:999;
+  inset:0;
+  opacity:0;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  transition:all 0.5s ease;
+
+
+  &:hover{
+    opacity:1
+  }
+`
+
 const Card = ({ type, imgUrl, title, views, createdAt, userId, _id }) => {
   const [channel, setChannel] = useState(null);
   const [error, setError] = useState('');
@@ -72,14 +95,19 @@ const Card = ({ type, imgUrl, title, views, createdAt, userId, _id }) => {
   return (
     <Link to={`/video/${_id}`} style={{ textDecoration: "none" }}>
       <Container type={type}>
-        <Image
-          type={type}
-          src={imgUrl}
-        />
+        <VideoThumbnailContainer>
+          <BackDrop>
+            <PlayCircleIcon htmlColor="rgba(255,255,255,0.6)" style={{ transform: 'scale(2.5)' }} />
+          </BackDrop>
+          <Image
+            type={type}
+            src={imgUrl}
+          />
+        </VideoThumbnailContainer>
         <Details type={type}>
           <ChannelImage
             type={type}
-            src={channel?.img}
+            src={channel?.img ? channel.img : 'https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg'}
           />
           <Texts>
             <Title>{title}</Title>

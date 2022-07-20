@@ -141,7 +141,7 @@ export default function Upload({ setOpen }) {
     try {
       const res = await axios.post('/api/videos', { ...inputs, tags });
       setOpen(false);
-      res.status === 200 && navigate(`/video/${res.data._id}`);
+      res.status === 200 && navigate(`/api/video/${res.data._id}`);
     } catch (error) {
       console.log(error);
     }

@@ -54,7 +54,7 @@ const Comment = ({ _id, userId, videoId, desc, createdAt }) => {
 
   return (
     <Container>
-      <Avatar src={channel?.img} />
+      <Avatar src={channel?.img ? channel.img : 'https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg'} />
       <Details>
         <Name>
           {channel?.username} <Date>{format(createdAt)}</Date>

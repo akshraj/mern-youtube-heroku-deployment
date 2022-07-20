@@ -51,7 +51,7 @@ const Comments = ({ videoId }) => {
   return (
     <Container>
       <NewComment>
-        <Avatar src={user?.img} />
+        <Avatar src={user?.img ? user.img : 'https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg'} />
         <Input placeholder="Add a comment..." />
       </NewComment>
       {comments?.length > 0 && comments?.map((comment, idx) => <Comment {...comment} key={idx} />)}

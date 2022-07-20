@@ -23,7 +23,10 @@ const Container = styled.div`
 const Content = styled.div`
   flex: 5;
 `;
-const VideoWrapper = styled.div``;
+const VideoWrapper = styled.div`
+  max-height:720px;
+  position:relative;
+`;
 
 const Title = styled.h1`
   font-size: 18px;
@@ -110,9 +113,20 @@ const Subscribe = styled.button`
 `;
 
 const VideoFrame = styled.video`
-  max-height:720px;
   width:100%;
   object-fit:cover;
+`
+
+const VideoPlayPause = styled.div`
+  position:absolute;
+  background-color:rgba(0,0,0,0.6);
+  inset:0;
+  z-index:999;
+  opacity:0;
+
+  &:hover{
+    opacity:1;
+  }
 `
 
 const Video = () => {
@@ -122,7 +136,7 @@ const Video = () => {
 
   const path = useLocation().pathname.split('/')[2];
 
-  const [channel, setChannel] = useState({});
+  const [channel, setChannel] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,7 +184,8 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          <VideoFrame src={currentVideo?.videoUrl} controls />
+          {/* <VideoPlayPause></VideoPlayPause> */}
+          <VideoFrame src={currentVideo?.videoUrl} controls autoplay={true} />
         </VideoWrapper>
         <Title>{currentVideo?.title}</Title>
         <Details>
@@ -193,7 +208,7 @@ const Video = () => {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src={channel?.img} />
+            <Image src={channel?.img ? channel.img : 'https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg'} />
             <ChannelDetail>
               <ChannelName>{channel?.username}</ChannelName>
               <ChannelCounter>{channel?.subscribers} subscribers</ChannelCounter>

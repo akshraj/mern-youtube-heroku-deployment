@@ -76,7 +76,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false)
   const { user } = useSelector(state => state.user);
-  const [searchInputText, setSearchInputText] = useState('')
+  const [searchInputText, setSearchInputText] = useState('');
+
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    localStorage.removeItem('persist:root');
+    window.location.reload();
+  }
+
   return (
     <>
       <Container>
@@ -92,9 +99,13 @@ const Navbar = () => {
             </Button>
           </Link> : <User>
             <VideoCallOutlinedIcon onClick={() => setOpen(true)} />
-            <Avatar src={user?.img} />
+            <Avatar src={user?.img ? user.img : 'https://i.pinimg.com/736x/89/90/48/899048ab0cc455154006fdb9676964b3.jpg'} />
             {user?.username}
           </User>}
+
+          {user && <Button style={{ marginLeft: '10px' }} onClick={handleLogOut}>
+            SIGN OUT
+          </Button>}
         </Wrapper>
       </Container>
       {open && <Upload setOpen={setOpen} />}

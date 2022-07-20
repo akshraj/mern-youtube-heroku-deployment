@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const INITIAL_STATE = {
   loading: false,
-  user: null,
+  user: null || localStorage.getItem("persist:root"),
   error: false,
   errorMessage: ''
 }

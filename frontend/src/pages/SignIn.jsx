@@ -92,7 +92,7 @@ const SignIn = () => {
   const signInWithGoogle = () => {
     dispatch(loginStart())
     signInWithPopup(auth, provider).then(result => {
-      axios.post('/auth/google', {
+      axios.post('/api/auth/google', {
         username: result.user.displayName,
         email: result.user.email,
         img: result.user.photoURL
@@ -109,7 +109,7 @@ const SignIn = () => {
         <Title>Sign in</Title>
         <SubTitle>to continue to LamaTube</SubTitle>
         <Input placeholder="username" onChange={e => setName(e.target.value)} />
-        <Input type="password" placeholder="username" onChange={e => setPassword(e.target.value)} />
+        <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
         <Button onClick={signInWithGoogle}>Sign in with Google</Button>
