@@ -1,5 +1,6 @@
 const express = require('express');
-const { signIn, signUp, signInWithGoogle } = require('../controllers/auth');
+const { signIn, signUp, signInWithGoogle, logOut } = require('../controllers/auth');
+const verifyToken = require('../verifyToken');
 
 const router = express.Router();
 
@@ -12,5 +13,7 @@ router.post('/login', signIn);
 //google auth
 
 router.post('/google', signInWithGoogle);
+
+router.post('/logout', verifyToken, logOut);
 
 module.exports = router;

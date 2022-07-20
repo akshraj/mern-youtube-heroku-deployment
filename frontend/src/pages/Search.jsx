@@ -11,9 +11,13 @@ const Container = styled.div`
   gap:10px;
 `
 
+const NoVideoText = styled.h1`
+  color:#fff;
+`
+
 export default function Search() {
   const [videos, setVideos] = useState([]);
-  const query = useLocation().search
+  const query = useLocation().search;
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -25,7 +29,7 @@ export default function Search() {
 
   return (
     <Container>
-      {videos?.map(video => <Card key={video._id} {...video} />)}
+      {videos?.length > 0 ? videos?.map(video => <Card key={video._id} {...video} />) : <NoVideoText>No video found</NoVideoText>}
     </Container>
   )
 }

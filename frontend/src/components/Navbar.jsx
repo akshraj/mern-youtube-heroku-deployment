@@ -4,8 +4,10 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Upload from "./Upload";
+import axios from "axios";
+import { logout } from "../redux/reducers/userSlice";
 
 const User = styled.div`
   display: flex;
@@ -57,6 +59,7 @@ const Input = styled.input`
   border: none;
   background-color: transparent;
   outline: none;
+  flex:1;
   color: ${({ theme }) => theme.text};
 `;
 
@@ -77,11 +80,17 @@ const Navbar = () => {
   const [open, setOpen] = useState(false)
   const { user } = useSelector(state => state.user);
   const [searchInputText, setSearchInputText] = useState('');
+  const dispatch = useDispatch();
 
-  const handleLogOut = (e) => {
+  const handleLogOut = async (e) => {
     e.preventDefault();
-    localStorage.removeItem('persist:root');
-    window.location.reload();
+    try {
+      await axios.post('/api/auth/logout');
+      localStorage.removeItem('persist:root');
+      dispatch(logout())
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -90,7 +99,7 @@ const Navbar = () => {
         <Wrapper>
           <Search>
             <Input placeholder="Search" onChange={e => setSearchInputText(e.target.value)} />
-            <SearchOutlinedIcon onClick={() => navigate(`/search?q=${searchInputText}`)} />
+            <SearchOutlinedIcon onClick={() => navigate(`/search?q=${searchInputText}`)} style={{ cursor: 'pointer' }} />
           </Search>
           {!user ? <Link to="signin" style={{ textDecoration: "none" }}>
             <Button>

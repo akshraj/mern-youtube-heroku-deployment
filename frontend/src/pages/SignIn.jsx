@@ -97,7 +97,6 @@ const SignIn = () => {
         email: result.user.email,
         img: result.user.photoURL
       }).then(result => {
-        console.log(result);
         dispatch(loginSuccess(result.data))
       })
     }).catch(err => dispatch(loginFailure(err)))

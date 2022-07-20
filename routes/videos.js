@@ -28,6 +28,6 @@ router.get('/sub', verifyToken, getSubChannelsVideos);
 router.get('/tags', getByTag);
 
 //search by query text
-router.get('/search', verifyToken, search);
+router.get('/search', search);
 
 module.exports = router;

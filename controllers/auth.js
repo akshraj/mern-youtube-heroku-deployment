@@ -60,5 +60,15 @@ const signInWithGoogle = async (req, res, next) => {
   }
 }
 
+const logOut = async (req, res) => {
+  console.log(req.user);
+  if (req.user) {
+    await res.clearCookie('access_token') // clean up!
+    return res.json({ msg: 'logging you out' });
+  } else {
+    return res.json({ msg: 'no user to log out!' });
+  }
+}
 
-module.exports = { signUp, signIn, signInWithGoogle };
+
+module.exports = { signUp, signIn, signInWithGoogle, logOut };
