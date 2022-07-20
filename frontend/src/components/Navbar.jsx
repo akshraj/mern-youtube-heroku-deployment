@@ -29,6 +29,7 @@ const Container = styled.div`
   top: 0;
   background-color: ${({ theme }) => theme.bgLighter};
   height: 56px;
+  z-index:999;
 `;
 
 const Wrapper = styled.div`
@@ -93,13 +94,19 @@ const Navbar = () => {
     }
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInputText === '') return;
+    navigate(`/search?q=${searchInputText}`);
+  }
+
   return (
     <>
       <Container>
         <Wrapper>
           <Search>
             <Input placeholder="Search" onChange={e => setSearchInputText(e.target.value)} />
-            <SearchOutlinedIcon onClick={() => navigate(`/search?q=${searchInputText}`)} style={{ cursor: 'pointer' }} />
+            <SearchOutlinedIcon onClick={handleSearch} style={{ cursor: 'pointer' }} />
           </Search>
           {!user ? <Link to="signin" style={{ textDecoration: "none" }}>
             <Button>

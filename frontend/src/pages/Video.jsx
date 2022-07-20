@@ -8,7 +8,7 @@ import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined";
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { dislike, like, loadingSingleVideoSuccess } from '../redux/reducers/videosSlice';
 import { subscribeUser } from '../redux/reducers/userSlice';
 import axios from "axios";
@@ -117,22 +117,11 @@ const VideoFrame = styled.video`
   object-fit:cover;
 `
 
-const VideoPlayPause = styled.div`
-  position:absolute;
-  background-color:rgba(0,0,0,0.6);
-  inset:0;
-  z-index:999;
-  opacity:0;
-
-  &:hover{
-    opacity:1;
-  }
-`
-
 const Video = () => {
   const { user } = useSelector(state => state.user);
   const { currentVideo } = useSelector(state => state.video);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const path = useLocation().pathname.split('/')[2];
 
@@ -154,8 +143,12 @@ const Video = () => {
 
   const handleLike = async () => {
     try {
-      await axios.put(`/api/users/like/${currentVideo._id}`);
-      dispatch(like(user?._id))
+      if (user) {
+        await axios.put(`/api/users/like/${currentVideo._id}`);
+        dispatch(like(user?._id))
+      } else {
+        navigate('/signin')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -163,8 +156,12 @@ const Video = () => {
 
   const handleDislike = async () => {
     try {
-      await axios.put(`/api/users/dislike/${currentVideo._id}`);
-      dispatch(dislike(user?._id))
+      if (user) {
+        await axios.put(`/api/users/dislike/${currentVideo._id}`);
+        dispatch(dislike(user?._id))
+      } else {
+        navigate('/signin')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -172,8 +169,12 @@ const Video = () => {
 
   const handleSubscribe = async () => {
     try {
-      user?.subscribedUsers?.includes(channel?._id) ? await axios.put(`/api/users/unsub/${channel?._id}`) : await axios.put(`/api/users/sub/${channel?._id}`);
-      dispatch(subscribeUser(channel?._id));
+      if (user) {
+        user?.subscribedUsers?.includes(channel?._id) ? await axios.put(`/api/users/unsub/${channel?._id}`) : await axios.put(`/api/users/sub/${channel?._id}`);
+        dispatch(subscribeUser(channel?._id));
+      } else {
+        navigate('/signin')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -184,7 +185,6 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          {/* <VideoPlayPause></VideoPlayPause> */}
           <VideoFrame src={currentVideo?.videoUrl} controls autoplay={true} />
         </VideoWrapper>
         <Title>{currentVideo?.title}</Title>
@@ -217,7 +217,7 @@ const Video = () => {
               </Description>
             </ChannelDetail>
           </ChannelInfo>
-          <Subscribe onClick={handleSubscribe}>{user?.subscribedUsers?.includes(channel?._id) ? 'SUBSCRIBED' : 'SUBSCRIBE'}</Subscribe>
+          {user?._id !== channel?._id && <Subscribe onClick={handleSubscribe}>{user?.subscribedUsers?.includes(channel?._id) ? 'SUBSCRIBED' : 'SUBSCRIBE'}</Subscribe>}
         </Channel>
         <Hr />
         <Comments videoId={currentVideo?._id} />

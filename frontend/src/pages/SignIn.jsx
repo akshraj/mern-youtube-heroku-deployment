@@ -69,23 +69,56 @@ const Link = styled.span`
   margin-left: 30px;
 `;
 
+const ErrorMessage = styled.p`
+  color:red;
+`
+
 const SignIn = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
+  const [registerErrorMsg, setRegisterErrorMsg] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(loginStart())
+    setError(false);
+    setLoginErrorMessage('');
     try {
+      if (name === '' || password === '') {
+        throw new Error('Please fill out username and password field');
+      }
+      dispatch(loginStart())
       const res = await axios.post(`/api/auth/login`, {
         username: name,
         password
       });
       dispatch(loginSuccess(res.data))
     } catch (err) {
-      dispatch(loginFailure(err))
+      setError(true)
+      setLoginErrorMessage(err?.response?.data?.message || err?.message)
+      dispatch(loginFailure(err));
+    }
+  }
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      if (name === '' || password === '' || email === '') {
+        throw new Error('Please fill out all fields');
+      }
+      const res = await axios.post(`/api/auth/register`, {
+        username: name,
+        password,
+        email
+      });
+      dispatch(loginSuccess(res.data));
+    } catch (err) {
+      setError(true);
+      setRegisterErrorMsg(err?.response?.data?.message || err?.message)
+      console.log(err);
     }
   }
 
@@ -109,6 +142,7 @@ const SignIn = () => {
         <SubTitle>to continue to LamaTube</SubTitle>
         <Input placeholder="username" onChange={e => setName(e.target.value)} />
         <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
+        {error && <ErrorMessage>{loginErrorMessage}</ErrorMessage>}
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
         <Button onClick={signInWithGoogle}>Sign in with Google</Button>
@@ -116,7 +150,8 @@ const SignIn = () => {
         <Input placeholder="username" onChange={e => setName(e.target.value)} />
         <Input placeholder="email" onChange={e => setEmail(e.target.value)} />
         <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
-        <Button>Sign up</Button>
+        {error && registerErrorMsg && <ErrorMessage>{registerErrorMsg}</ErrorMessage>}
+        <Button onClick={handleSignUp}>Sign up</Button>
       </Wrapper>
       <More>
         English(USA)

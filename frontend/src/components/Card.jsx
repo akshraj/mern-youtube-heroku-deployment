@@ -18,6 +18,7 @@ const Image = styled.img`
   height: ${(props) => (props.type === "sm" ? "120px" : "202px")};
   background-color: #999;
   flex: 1;
+  object-fit:cover;
 `;
 
 const Details = styled.div`
@@ -62,7 +63,7 @@ const Info = styled.div`
 const BackDrop = styled.div`
   position:absolute;
   background-color: rgba(0,0,0,0.6);
-  z-index:999;
+  z-index:2;
   inset:0;
   opacity:0;
   display:flex;

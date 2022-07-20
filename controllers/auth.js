@@ -10,11 +10,16 @@ const signUp = async (req, res, next) => {
     const hashedPassword = await AuthService.hashedPassword(req.body.password);
     const newUser = new User({ ...req.body, password: hashedPassword });
     const user = await newUser.save();
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT);
+      // const { password, ...other } = user._doc;
+      return res.cookie("access_token", token, {
+        httpOnly: true
+      }).status(200).json(userDto(user));
+    }
 
-    // const { password, ...other } = user._doc;
-    return res.status(200).json(userDto(user));
   } catch (err) {
-    return next(err);
+    return next(createError(404, 'username already exists'));
   }
 }
 const signIn = async (req, res, next) => {
