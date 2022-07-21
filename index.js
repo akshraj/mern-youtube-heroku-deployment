@@ -7,6 +7,7 @@ const commentsRoute = require('./routes/comments');
 const authRoute = require('./routes/auth');
 require('dotenv').config();
 const app = express();
+const path = require("path");
 
 const port = process.env.PORT || 7000;
 app.use(express.json());
@@ -38,7 +39,7 @@ app.use((err, req, res, next) => {
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.use(express.static('frontend/build'));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/frontend/build/ index.html'));
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
   });
 }
 
